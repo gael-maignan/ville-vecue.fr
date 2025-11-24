@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- important pour mobile -->
+    <title>Ville Vécue - La Ville à franchir</title>
+
+    <link rel="stylesheet" 
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            font-family: Arial, sans-serif;
+        }
+
+        /* --- CARTE --- */
+        #map {
+            flex: 1;
+            height: 100%;
+            position: relative;
+            min-width: 0; /* évite overflow flex */
+        }
+
+        /* --- BARRE DE RECHERCHE --- */
+        /* --- BARRE DE RECHERCHE --- */ #searchBarContainer { position: absolute; top: 15px; left: 50%; transform: translateX(-50%); z-index: 9999; } .search-wrapper{ width:min(540px,100%); display:flex; gap:10px; background:white; padding:10px 14px; border-radius:14px; align-items:center; box-shadow:0 6px 18px rgba(24,39,75,0.06); border:1px solid var(--soft-border); } #searchBar{ flex:1; border:none; padding:10px 0; font-size:1rem; background:transparent; color:#0f1720; } #searchBar::placeholder{ color:var(--muted); } #searchButton{ display:flex; align-items:center; justify-content:center; height:38px; width:42px; border-radius:10px; border:none; background:linear-gradient(180deg,var(--accent),#5a78e3); color:white; font-size:1.2rem; cursor:pointer; box-shadow:0 6px 16px rgba(108,142,245,0.18); }
+
+        .popup-content img {
+            width: 100%;
+            border-radius: 4px;
+            margin: 6px 0;
+        }
+
+        /* --- PANNEAU LATERAL AMELIORE --- */
+        #sidebar {
+            width: 350px;
+            background: #ffffff;
+            border-right: 1px solid #e3e3e3;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        #sidebar h2 {
+            font-size: 1.2rem;
+            margin: 0;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .filter-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #444;
+        }
+
+        /* Boutons de filtres style "pill" */
+        .filter-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 14px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            border: 1px solid #ccc;
+            transition: 0.2s ease;
+            background: #f7f7f7;
+        }
+
+        .filter-btn:hover {
+            background: #e8e8e8;
+        }
+
+        .filter-btn.active {
+            background: #4a6cf7;
+            color: white;
+            border-color: #4a6cf7;
+        }
+
+        /* --- INFOS --- */
+        #infoBox {
+            background: #f9fafc;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #e7e7e7;
+            font-size: 0.95rem;
+        }
+
+        /* Pastilles pastel */
+        .filter-btn[data-filter="red"] {
+            background: #ffe5e5;
+            border-color: #ffcccc;
+            color: #d24747;
+        }
+
+        .filter-btn[data-filter="orange"] {
+            background: #ffe9d6;
+            border-color: #ffd2ad;
+            color: #d67a2c;
+        }
+
+        .filter-btn[data-filter="yellow"] {
+            background: #fff9d6;
+            border-color: #ffeeb0;
+            color: #bfa200;
+        }
+
+        .filter-btn.active[data-filter="red"] {
+            background: #ff7a7a;
+            border-color: #ff5c5c;
+            color: white;
+        }
+
+        .filter-btn.active[data-filter="orange"] {
+            background: #ff9f50;
+            border-color: #ff8a29;
+            color: white;
+        }
+
+        .filter-btn.active[data-filter="yellow"] {
+            background: #ffd94d;
+            border-color: #ffca00;
+            color: white;
+        }
+
+        /* Bouton "Tous" */
+        .filter-btn[data-filter="all"] {
+            background: #f1f1f1;
+            color: #555;
+        }
+        .filter-btn.active[data-filter="all"] {
+            background: black;
+            color: white;
+        }
+
+        /* ------------------------
+           Hide sidebar on small screens
+           ------------------------ */
+        @media (max-width: 768px) {
+            #sidebar {
+                display: none !important; /* s'assure qu'il est caché */
+            }
+
+            /* make the map fill the whole viewport */
+            #map {
+                flex: 1 1 100%;
+                width: 100%;
+                height: 100vh;
+            }
+
+            /* center the search bar nicely on mobile */
+            #searchBarContainer {
+                left: 50%;
+                transform: translateX(-50%);
+                width: calc(100% - 32px);
+                box-sizing: border-box;
+            }
+
+            body {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- PANNEAU LATERAL -->
+<div id="sidebar">
+
+    <h1>La Ville à franchir</h1>
+
+    <h2>Filtres</h2>
+
+    <div class="filter-group">
+        <span class="filter-label">Catégorie :</span>
+
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Tous</button>
+            <button class="filter-btn" data-filter="yellow">Fatigant / Difficile</button>
+            <button class="filter-btn" data-filter="orange">Aide nécessaire</button>
+            <button class="filter-btn" data-filter="red">Infranchissable</button>
+        </div>
+    </div>
+
+    <h2>Infos</h2>
+    <div id="infoBox">
+        Points affichés : <span id="count">0</span>
+    </div>
+
+    <p id="annee" style="font-size: 0.9rem; color: grey;">La Ville Vécue - </p>
+
+    <script>
+      const annee = new Date().getFullYear();
+      document.getElementById("annee").textContent = `La Ville Vécue - ${annee}`;
+    </script>
+
+</div>
+
+<script>
+    /* --- Gestion des boutons de filtre ergonomiques --- */
+    document.querySelectorAll(".filter-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+
+            // Style active
+            document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+
+            // Filtrage réel
+            const value = btn.getAttribute("data-filter");
+            afficherPoints(value);
+        });
+    });
+</script>
+
+<!-- MAP + SEARCH -->
+<div id="map">
+
+    <!-- BARRE DE RECHERCHE AVEC ICONE -->
+    <div id="searchBarContainer">
+        <div class="search-wrapper">
+            <input id="searchBar" type="text" placeholder="Rechercher une ville">
+            <button id="searchButton" aria-label="Rechercher">
+                <svg width="24" height="24" viewBox="0 0 24 24" 
+                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <rect width="24" height="24" fill="white"/>
+                    <circle cx="10" cy="10" r="6" 
+                            stroke="black" stroke-width="2" fill="none"/>
+                    <line x1="14.5" y1="14.5" x2="20" y2="20" 
+                          stroke="black" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+/* --- INITIALISATION CARTE --- */
+const map = L.map('map').setView([48.8566, 2.3522], 12);
+L.tileLayer(
+  'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+  {
+    maxZoom: 19,
+    attribution: '&copy; Carto'
+  }
+).addTo(map);
+
+/* --- MARKERS & FILTRES --- */
+function pin(color) {
+    const pastelColors = {
+        red:    "#FF4747",
+        orange: "#FFA347",
+        yellow: "#FFEB6D"
+    };
+
+    return L.divIcon({
+        className: "custom-pin",
+        html: `
+            <div style="
+                width: 20px;
+                height: 20px;
+                background: ${pastelColors[color] || "#ccc"};
+                border-radius: 50%;
+                border: 2px solid rgba(0,0,0,0.2);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            "></div>
+        `,
+        iconSize: [20,20],
+        iconAnchor: [10,10]
+    });
+}
+
+const points = [
+    { position:[48.8584,2.2945], color:"red", subtitle:"Titre",
+      image:"",
+      description:"Description" },
+
+    { position:[48.8606,2.3376], color:"red", subtitle:"Titre",
+      image:"",
+      description:"Description" },
+
+    { position:[48.8867,2.3431], color:"yellow", subtitle:"Titre",
+      image:"",
+      description:"Description" },
+
+    { position:[48.8530,2.3499], color:"yellow", subtitle:"Titre",
+      image:"",
+      description:"Description" },
+
+    { position:[48.8635,2.3611], color:"orange", subtitle:"Titre",
+      image:"",
+      description:"Description" },
+
+    { position:[48.8462,2.3372], color:"orange", subtitle:"Titre",
+      image:"",
+      description:"Description" }
+];
+
+let markers = [];
+
+let colors = {
+    "red":"Obstacle infranchissable",
+    "yellow":"Obstacle fatigant / difficile",
+    "orange":"Obstacle nécessitant une aide"
+};
+
+function afficherPoints(filtre) {
+    markers.forEach(m => map.removeLayer(m));
+    markers = [];
+
+    let visibles = 0;
+
+    points.forEach(poi => {
+        if (filtre !== "all" && poi.color !== filtre) return;
+
+        const popupHTML = `
+            <div class="popup-content">
+                <h1>${colors[poi.color]}</h1>
+                <h2>${poi.subtitle}</h2>
+                ${poi.image ? `<img src="${poi.image}" alt="${poi.subtitle}">` : ""}
+                <p>${poi.description}</p>
+            </div>
+        `;
+
+        const m = L.marker(poi.position, { icon: pin(poi.color) })
+                   .addTo(map)
+                   .bindPopup(popupHTML);
+
+        markers.push(m);
+        visibles++;
+    });
+
+    document.getElementById("count").textContent = visibles;
+}
+
+afficherPoints("all");
+
+/* --- FONCTION RECHERCHE DE VILLE --- */
+async function searchCity() {
+    const query = document.getElementById("searchBar").value.trim();
+    if (!query) return;
+
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`;
+
+    try {
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.length > 0) {
+            const { lat, lon } = data[0];
+            map.setView([lat, lon], 12);
+        } else {
+            alert("Ville introuvable.");
+        }
+    } catch (e) {
+        alert("Erreur lors de la recherche.");
+        console.error(e);
+    }
+}
+
+/* --- LANCER PAR ENTER --- */
+document.getElementById("searchBar").addEventListener("keydown", e => {
+    if (e.key === "Enter") searchCity();
+});
+
+/* --- LANCER PAR CLIC SUR L'ICONE --- */
+document.getElementById("searchButton").addEventListener("click", searchCity);
+
+/* --- S'assurer que Leaflet recalcule sa taille sur resize (utile sur mobile) --- */
+function refreshMapSize() {
+    // petit délai pour laisser le layout se stabiliser (important sur mobile)
+    setTimeout(() => {
+        if (map && typeof map.invalidateSize === 'function') {
+            map.invalidateSize();
+        }
+    }, 150);
+}
+window.addEventListener('resize', refreshMapSize);
+window.addEventListener('orientationchange', refreshMapSize);
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) refreshMapSize();
+});
+
+// appel initial au cas où la sidebar était cachée au chargement
+refreshMapSize();
+</script>
+
+</body>
+</html>

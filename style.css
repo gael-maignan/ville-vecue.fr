@@ -113,6 +113,8 @@ background-image: url('images/2.webp');
     transition: 0.2s ease-in-out;
     border: 1px solid #ddd;
     position: relative; /* Nécessaire pour positionner la flèche */
+        display: block;
+
 }
 
 .arrow-icon {

@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="style.css">
   <script type="module" src="https://gael-mgn.github.io/js/log.js"></script>
 
+   <script src="scroll.js"></script>
 
 <style>
   .container p {
@@ -45,6 +46,16 @@ function toggleNav() {
 }
 </script>
 
+
+<style>
+  .container{
+    width: 92%;
+    margin: auto;
+        max-width: 1200px;
+      }
+
+</style>
+
 <main>
   <section id="home">
     <div class="container">
@@ -68,9 +79,57 @@ Cet outil permet de comparer les parcours, de visualiser les écarts de temps, e
 <p>
 À travers cet atelier, Ville vécue souhaite changer les regards sur l’accessibilité, encourager une approche sensible et inclusive de la conception urbaine, et rappeler que la ville se vit au pluriel, une ville, mille vécus.</p>
 <br>
-<h3>Carte intéractive des derniers trajets</h3>
 
+<h3>Atlas des entraves à la mobilité</h3>
 
+<p>Afin de donner une vision globale de nos actions, nous avons créé une carte interactive sur laquelle seront recensés tous les obstacles à la mobilité rencontrés lors de nos ateliers de sensibilisation. Les obstacles y sont classés selon trois niveaux :</p>
+<h4>Obstacle fatigant / difficile</h4>
+Obstacles pouvant être franchis mais demandant un effort important ou générant de l’inconfort (pente légère, revêtement irrégulier, petite marche, longue distance, etc.).
+<h4>Obstacle nécessitant l’aide d’une tierce personne</h4>
+Situations où la personne ne peut pas franchir seule l’obstacle et doit solliciter quelqu’un (rampe trop pentue, porte lourde ou difficile à ouvrir, ressaut important, etc.).
+<h4>Obstacle infranchissable</h4>
+Obstacles rendant le passage impossible sans se lever, contourner largement ou renoncer au déplacement (escalier, trottoir trop haut, passage trop étroit, itinéraire alternatif trop long ou inexistant, etc.).
+</ul>
+
+<div class="iframe-container">
+  <iframe 
+    src="ville-a-franchir.html"
+    frameborder="0"
+    allowfullscreen>
+  </iframe>
+</div>
+
+<style>
+/* Conteneur en 16/9 par défaut (desktop) */
+.iframe-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+}
+
+/* L’iframe occupe tout l’espace disponible */
+.iframe-container iframe {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Sur mobile : format inversé 9/16 */
+@media (max-width: 768px) {
+  .iframe-container {
+    aspect-ratio: 9 / 16;
+  }
+
+  .iframe-container {
+  width: 90%;
+margin: auto;
+}
+}
+</style>
+
+<!--
 <style>
     .iframe-container {
       position: relative;
@@ -104,11 +163,10 @@ Cet outil permet de comparer les parcours, de visualiser les écarts de temps, e
       title="Carte intéractive" 
       allowfullscreen>
     </iframe>
-  </div>
+  </div>-->
   <br>
 
-  <h3>Atlas des entraves à la mobilité</h3>
-  <p>[...]</p>
+  
 
 
 
