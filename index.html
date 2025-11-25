@@ -8,7 +8,7 @@
 
    <script type="module" src="https://gael-mgn.github.io/js/log.js"></script>
 
-   <script src="scroll.js"></script>
+   <script src="script.js"></script>
 
 
  <meta name="keywords" content="ville vécue, association, urbanisme inclusif, ville inclusive, espaces publics inclusifs, expérience urbaine, vécu urbain, diagnostics sensibles, ateliers urbains, inclusion dans l’espace public">
@@ -55,7 +55,28 @@ function toggleNav() {
 <main>
   <section id="home">
     <div class="container">
-    <h2>Une Ville, Mille Vécus...</h2>
+    <h2 class="wiggle">Une <span>Ville</span>, Mille <span>Vécus...</span></h2>
+    
+<style>.wiggle span {
+  display: inline-block;
+  animation: updown 1s ease-in-out infinite alternate;
+}
+
+@keyframes updown {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-3px);
+  }
+}
+
+/* Décalage progressif entre les mots */
+.wiggle span:nth-child(1) { animation-delay: 0s; }
+.wiggle span:nth-child(2) { animation-delay: 0.5s; }
+/* Ajoute plus si nécessaire */
+</style>
+
     <p><em>Ville Vécue</em> est une association citoyenne qui promeut la diversité et l’inclusion dans l’espace public. Composée d’étudiant·e·s en urbanisme, sciences humaines, génie et santé, l’association mêle réflexion, témoignages et actions concrètes pour repenser la ville afin qu’elle soit praticable par toutes et tous.</p>
     <a href="actions.html" class="button">Découvrir nos actions</a>
   </div>
@@ -65,6 +86,100 @@ function toggleNav() {
     <div class="container">
     <h2>Notre mission</h2>
     <p>Composée d’étudiant·e·s en urbanisme, sciences humaines, génie et santé, l’association mêle réflexion, témoignages et actions concrètes pour repenser la ville afin qu’elle soit praticable par toutes et tous. Nous nous intéressons à toutes les formes d’inclusion/exclusion : genre, âge, mobilité, déficiences sensorielles, et usages sociaux des espaces.</p>
+    <br>
+
+    <h2>À la Une</h2>
+
+<a href="ville-a-franchir.html" target="_blank" class="article-link">
+    <div class="article-card">
+        <img src="images/map.png" alt="Image de l'article" class="article-image">
+
+        <div class="article-content">
+            <h3 class="article-title">Cartographie des entraves à la mobilité</h3>
+            <p class="article-description">
+                Découvrez l'ampleur de nos actions à l'aide de notre carte interactive ! <br>
+                Vous y retrouverez notamment tous les obstacles à la mobilité rencontrés lors de nos ateliers de sensibilisation.
+            </p>
+
+            <div class="arrow-wrapper">
+                <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M5 12h14M13 5l7 7-7 7" stroke="#555" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+</a>
+
+<style>
+/* Supprime le style du lien */
+.article-link {
+    text-decoration: none;
+    color: inherit;
+    display: block; /* Pour que le lien englobe la card */
+}
+
+.article-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin: 20px auto;
+    position: relative;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Effet au survol */
+.article-link:hover .article-card {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+.arrow-wrapper {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+
+.article-image {
+    width: 40%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.article-content {
+    flex: 1;
+}
+
+.article-title {
+    margin: 0 0 10px;
+    font-size: 1.4rem;
+}
+
+.article-description {
+    margin: 0;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* --- Responsive mobile --- */
+@media (max-width: 768px) {
+    .article-card {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .article-image {
+        width: 100%;
+    }
+}
+</style>
+
+
     <br>
 
 <!--
