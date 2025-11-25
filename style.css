@@ -1,6 +1,24 @@
+/* Appliquer un style par défaut aux éléments avec la classe 'appear' */
+.appear {
+  opacity: 0;
+  transform: translateY(6px);  /* Décalage pour l'animation */
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+
+/* La classe 'appear-visible' est ajoutée lors de la visibilité de l'élément */
+.appear-visible {
+  opacity: 1;
+  transform: translateY(0);  /* L'élément revient à sa position normale */
+}
+
+
+/*Lien*/
 .action {
   font-weight: bold;
 }
+
+
   h3 {
     margin-bottom: 0.5rem;
   }
