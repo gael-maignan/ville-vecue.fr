@@ -217,8 +217,7 @@
       const DATA_URL = "https://gael-mgn.github.io/divers/plaques_commemoratives.json";
       const loader = document.getElementById("loader");
       const showLoader = v => loader.style.display = v ? "block" : "none";
-
-      const map = L.map("map").setView([48.8566, 2.3522], 12);
+      const map = L.map('map', { center:[48.8566, 2.3522], zoom:12, zoomControl:false, attributionControl:false });
 
       const dotIcon = L.divIcon({
   className: '',
@@ -232,7 +231,7 @@ L.tileLayer(
   {
     attribution: "&copy; OpenStreetMap &copy; CARTO",
     subdomains: "abcd",
-    maxZoom: 19
+    maxZoom: 19,  attributionControl:false
   }
 ).addTo(map);
 
