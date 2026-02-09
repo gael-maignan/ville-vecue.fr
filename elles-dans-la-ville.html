@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ville Vécue — Elles dans la Ville</title>
+ <meta name="description" content="En arpentant Paris, les plaques commémoratives racontent une histoire urbaine faite de noms, de parcours et de mémoires. Mais cette histoire est loin d’être neutre. Très vite, un déséquilibre apparaît, les figures masculines y sont omniprésentes, tandis que les femmes demeurent largement invisibilisées.">
+<link rel="icon" href="logo.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+  <script type="module" src="https://gael-mgn.github.io/js/log.js"></script>
+
+   <script src="script.js"></script>
+
+<style>
+  .container p {
+    margin-bottom: 0.5rem;
+  }
+</style>
+
+</head>
+<body>
+
+<header>
+  <div class="header-container">
+    <a class="brand" href="index.html">
+      <img src="logo.png" alt="Ville Vécue" class="logo">
+    </a>
+
+    <button class="burger" id="burger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav id="nav">
+      <a href="about.html">À propos</a>
+      <a href="actions.html">Nos actions</a>
+      <a href="#join.html">Nous rejoindre</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .container{
+    width: 92%;
+    margin: auto;
+        max-width: 1200px;
+      }
+
+</style>
+
+<main>
+  <section id="home">
+    <div class="container">
+    <h2>Elles dans la Ville</h2>
+  </div>
+  </section>
+
+  <section id="apropos">
+    <div class="container">
+      <h2>Elles dans la Ville : Celles que la Ville oublie</h2>
+
+      <p>L’action « Elles dans la Ville » est née d’un questionnement simple : <strong>qui la ville choisit-elle de rendre visible ?</strong></p>
+
+      <p>En arpentant Paris, les plaques commémoratives racontent une histoire urbaine faite de noms, de parcours et de mémoires. Mais cette histoire est loin d’être neutre. Très vite, un déséquilibre apparaît, les figures masculines y sont omniprésentes, tandis que les femmes demeurent largement invisibilisées.</p>
+
+      <p>Une première étape consiste alors à cartographier les plaques mémorielles parisiennes afin de rendre visible, par la donnée et par l’image, la sous-représentation des femmes dans l’espace public.</p>
+<br>
+
+<h2>Carte intéractive des plaques mémorielles</h2>
+
+<p class="italic">Patience, la carte est encore en cours de création...</p>
+<br>
+
+
+  <div class="iframe-wrapper">
+  <iframe
+    src="elles-dans-la-ville/carte.html"
+    title="Iframe responsive"
+    allowfullscreen>
+  </iframe>
+</div>
+
+<br><br>
+
+<h2>Et après ?</h2>
+
+<p>Mais l’ambition de l’action ne s’arrête pas au constat. Elles dans la Ville cherche à ouvrir un espace de réappropriation collective de la mémoire urbaine. En rendant la carte participative, l’action invite les habitant·e·s à proposer des femmes qui ont marqué l’histoire, la culture, les luttes sociales ou la vie locale, et qui mériteraient elles aussi une reconnaissance symbolique dans la ville.</p>
+
+
+
+<style>.iframe-wrapper {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 3px solid #0b1f3a; /* bleu marine */
+  border-radius: 16px;
+  overflow: hidden; /* indispensable pour arrondir l'iframe */
+  box-sizing: border-box;
+}
+
+.iframe-wrapper iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .iframe-wrapper {
+    aspect-ratio: 9 / 16;
+  }
+}
+
+
+</style>
+
+</div>
+
+
+
+
+<br>
+
+
+
+
+
+
+
+
+  </section>
+
+  <section id="contact">
+    <div class="container">
+    <h2>Contact</h2>
+    <p>L’équipe de Ville vécue se tient à votre écoute pour toute demande d’information, de partenariat ou de participation à nos ateliers.<br>
+        N’hésitez pas à nous écrire à <strong><a href="mailto:contact@villevecue.fr">contact@villevecue.fr</a></strong>
+, nous vous répondrons avec plaisir dans les plus brefs délais.</p>
+  </div>
+  </section>
+
+</main>
+
+<footer>
+  © <span id="year"></span> — Ville Vécue
+</footer>
+
+<script>
+document.getElementById("year").textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
