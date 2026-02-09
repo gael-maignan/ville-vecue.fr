@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Elles dans la Ville — Carte</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="preload" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" as="style">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+  <!-- MarkerCluster CSS -->
+  <link rel="preload" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" as="style">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <style>
+    :root{--bg:#FFEBD8;--header:#FFEBD8;--text:#000A47}
+    *{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+    body{background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column}
+    header{padding:1rem;background:var(--header);color:#000A47;text-align:center}
+    #map{flex:1;height:calc(100vh - 88px);width:100%}
+    #loader{
+      position:absolute;top:1rem;right:1rem;
+      background:rgba(255,255,255,.9);padding:.5rem .75rem;border-radius:6px;
+      box-shadow:0 2px 8px rgba(0,0,0,.12);
+      font-size:.9rem;z-index:1000;display:none
+    }
+    .leaflet-popup-content h3{margin-bottom:.3rem;font-size:1.05rem}
+    .leaflet-popup-content p{font-size:.9rem;margin-bottom:.25rem}
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Elles dans la Ville</h1>
+    <p>Explorez la mémoire féminine de Paris</p>
+  </header>
+
+  <div id="map" aria-label="Carte des plaques commémoratives"></div>
+  <div id="loader" role="status" aria-live="polite">Chargement…</div>
+
+  <!-- Loader robuste Leaflet + MarkerCluster + init carte -->
+  <script>
+  (function () {
+
+    const SCRIPTS = [
+      {
+        src: "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js",
+        check: () => window.L
+      },
+      {
+        src: "https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js",
+        check: () => window.L && L.MarkerClusterGroup
+      }
+    ];
+
+    function loadScript(src, timeout = 10000) {
+      return new Promise((resolve, reject) => {
+        if (document.querySelector(`script[data-src="${src}"]`)) return resolve();
+
+        const s = document.createElement("script");
+        s.src = src;
+        s.async = false;
+        s.dataset.src = src;
+
+        s.onload = resolve;
+        s.onerror = () => reject(new Error("Erreur chargement " + src));
+
+        document.head.appendChild(s);
+
+        setTimeout(() => reject(new Error("Timeout " + src)), timeout);
+      });
+    }
+
+    (async function init() {
+      try {
+        for (const s of SCRIPTS) {
+          await loadScript(s.src);
+          const start = Date.now();
+          while (!s.check()) {
+            if (Date.now() - start > 3000) break;
+            await new Promise(r => setTimeout(r, 50));
+          }
+        }
+      } catch (e) {
+        console.error("Échec chargement Leaflet", e);
+        return;
+      }
+
+      const DATA_URL = "https://gael-mgn.github.io/divers/plaques_commemoratives.json";
+      const loader = document.getElementById("loader");
+      const showLoader = v => loader.style.display = v ? "block" : "none";
+
+      const map = L.map("map").setView([48.8566, 2.3522], 12);
+
+      L.tileLayer(
+  "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+  {
+    attribution: "&copy; OpenStreetMap &copy; CARTO",
+    maxZoom: 19
+  }
+).addTo(map);
+
+
+      const clusterGroup = L.markerClusterGroup({ chunkedLoading: true });
+      clusterGroup.addTo(map);
+
+      showLoader(true);
+
+      fetch(DATA_URL)
+        .then(r => r.json())
+        .then(features => {
+          features.forEach(p => {
+            const { lat, lon } = p.geo_point_2d || {};
+            if (!lat || !lon) return;
+
+            const marker = L.marker([lat, lon]);
+            marker.bindPopup(`
+                      <h3>${p.titre ?? 'Plaque commémorative'}</h3>
+        <p><strong>Adresse :</strong> ${p.adresse ?? '—'}</p>
+        <p><strong>Arrt :</strong> ${p.ardt ?? '—'}</p>
+        <p><strong>Personnalité :</strong> ${p.personnalite ?? '—'}</p>
+        <p><strong>Période :</strong> ${p.periode_1 ?? p.siecle ?? '—'}</p>
+        <p><strong>Matériau :</strong> ${p.materiau ?? '—'}</p>
+        <p>${p.retranscription ?? ''}</p>
+            `);
+            clusterGroup.addLayer(marker);
+          });
+          showLoader(false);
+        })
+        .catch(err => {
+          console.error("Erreur données", err);
+          showLoader(false);
+        });
+    })();
+
+  })();
+  </script>
+</body>
+</html>
