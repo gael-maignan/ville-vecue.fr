@@ -11,7 +11,6 @@
   <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
   <link rel="stylesheet" href="style/main.css">
   <link rel="stylesheet" type="text/css" href="style/article.css">
-  <script src="js/smooth-scroll.js"></script>
 
   <meta name="description" content="« En sortant de l’école » est une action de sensibilisation immersive destinée aux étudiant·e·s en urbanisme, génie civil, architecture ou formation d’ingénieur·e.
 L’objectif : faire vivre concrètement la ville depuis la perspective d’une personne à mobilité réduite, afin de dépasser la simple lecture réglementaire de l’accessibilité.">
@@ -153,6 +152,43 @@ L’objectif : faire vivre concrètement la ville depuis la perspective d’une 
           À travers cet atelier, nous souhaitons changer les regards sur l’accessibilité, encourager une approche sensible et inclusive de la conception urbaine, et rappeler que la ville se vit au pluriel, une ville, mille vécus.
         </p>
 
+
+
+<h2>Cartographie de l'accessibilité</h2>
+
+<p>Ci-dessous vous retrouverez l'ensemble des trajets réalisés au cours de nos derniers ateliers, vous pouvez également ouvrir la carte dans un nouvel onglet en cliquant ici : <a href="en-sortant-de-l-ecole/carte.html" target="_blank">Ville Vécue - Carte interactive de l'atelier « En Sortant de l’École »</a></p>
+
+<div class="iframe-container">
+  <iframe 
+    src="en-sortant-de-l-ecole/carte.html"
+    title="iframe example"
+    allowfullscreen>
+  </iframe>
+</div>
+<style>
+  .iframe-container {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+}
+
+    /* Mobile (≤ 600px) */
+    @media (max-width: 600px) {
+  .iframe-container {
+  aspect-ratio: 10 / 16;
+}
+    }
+
+
+
+.iframe-container iframe {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  border: solid 1px var(--accent);
+}
+</style>
+
+
          <h2>Foire aux questions</h2>
 
 
@@ -259,6 +295,7 @@ Nous convenons ensemble :</p>
         </blockquote>
 
 -->
+
 
 <h2>Organiser un atelier</h2>
 
